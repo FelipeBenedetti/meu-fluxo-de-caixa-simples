@@ -5,6 +5,7 @@ import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import { TransactionProvider } from './contexts/TransactionContext';
 
 import Layout from './components/layout/Layout';
+import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -24,66 +25,48 @@ function App() {
           <TransactionProvider>
             <Toaster position="top-right" />
             <Routes>
+              <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route element={<Layout />}>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route 
-                  path="/dashboard" 
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionRoute>
-                        <DashboardPage />
-                      </SubscriptionRoute>
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/transactions" 
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionRoute>
-                        <TransactionsPage />
-                      </SubscriptionRoute>
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/transactions/new" 
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionRoute>
-                        <NewTransactionPage />
-                      </SubscriptionRoute>
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/categories" 
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionRoute>
-                        <CategoriesPage />
-                      </SubscriptionRoute>
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/subscription" 
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionPage />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage />
-                    </ProtectedRoute>
-                  } 
-                />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <SubscriptionRoute>
+                      <DashboardPage />
+                    </SubscriptionRoute>
+                  </ProtectedRoute>
+                } />
+                <Route path="/transactions" element={
+                  <ProtectedRoute>
+                    <SubscriptionRoute>
+                      <TransactionsPage />
+                    </SubscriptionRoute>
+                  </ProtectedRoute>
+                } />
+                <Route path="/transactions/new" element={
+                  <ProtectedRoute>
+                    <SubscriptionRoute>
+                      <NewTransactionPage />
+                    </SubscriptionRoute>
+                  </ProtectedRoute>
+                } />
+                <Route path="/categories" element={
+                  <ProtectedRoute>
+                    <SubscriptionRoute>
+                      <CategoriesPage />
+                    </SubscriptionRoute>
+                  </ProtectedRoute>
+                } />
+                <Route path="/subscription" element={
+                  <ProtectedRoute>
+                    <SubscriptionPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                } />
               </Route>
             </Routes>
           </TransactionProvider>
