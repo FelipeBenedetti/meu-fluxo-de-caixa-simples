@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, CreditCard } from 'lucide-react';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useStripe } from '../hooks/useStripe';
+import { STRIPE_PRODUCTS } from '../stripe-config';
 import toast from 'react-hot-toast';
 
 const SubscriptionPage = () => {
   const { subscription, createTrialSubscription } = useSubscription();
+  const { createCheckoutSession } = useStripe();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -18,6 +21,29 @@ const SubscriptionPage = () => {
     } catch (error) {
       toast.error('Erro ao iniciar período de teste.');
       console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubscribe = async () => {
+    setLoading(true);
+    try {
+      const response = await createCheckoutSession({
+        priceId: STRIPE_PRODUCTS.MEU_FLUXO_DE_CAIXA_SIMPLES.priceId,
+        mode: 'subscription',
+        successUrl: `${window.location.origin}/dashboard?success=true`,
+        cancelUrl: `${window.location.origin}/subscription?success=false`,
+      });
+
+      if (response?.url) {
+        window.location.href = response.url;
+      } else {
+        toast.error('Erro ao redirecionar para o checkout.');
+      }
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      toast.error('Erro ao processar sua solicitação.');
     } finally {
       setLoading(false);
     }
@@ -40,7 +66,7 @@ const SubscriptionPage = () => {
             <div className="flex items-center justify-between pb-6 border-b border-gray-200">
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
-                  Seu plano atual: {subscription.plan?.name || 'Padrao'}
+                  Seu plano atual: {subscription.plan?.name || 'Padrão'}
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
                   Status: {subscription.isTrialActive ? 'Em período de teste' : subscription.status === 'active' ? 'Ativo' : 'Inativo'}
@@ -86,13 +112,12 @@ const SubscriptionPage = () => {
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => {
-                  toast.success('Em breve você poderá gerenciar sua assinatura aqui!');
-                }}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={handleSubscribe}
+                disabled={loading}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
                 <CreditCard className="h-5 w-5 mr-2" />
-                Gerenciar assinatura
+                {loading ? 'Processando...' : 'Assinar agora'}
               </button>
             </div>
           </div>
@@ -110,7 +135,7 @@ const SubscriptionPage = () => {
             <div className="mt-8 max-w-md mx-auto">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="p-6">
-                  <h3 className="text-lg font-medium text-gray-900 text-center">Plano Padrao</h3>
+                  <h3 className="text-lg font-medium text-gray-900 text-center">Plano Padrão</h3>
                   <p className="mt-4 text-sm text-gray-500 text-center">
                     Tudo o que você precisa para controlar suas finanças
                   </p>

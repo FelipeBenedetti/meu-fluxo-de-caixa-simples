@@ -10,6 +10,7 @@ const stripe = new Stripe(stripeSecret, {
     version: '1.0.0',
   },
 });
+console.log('Stripe Secret Key:', stripeSecret);
 
 // Helper function to create responses with CORS headers
 function corsResponse(body: string | object | null, status = 200) {
