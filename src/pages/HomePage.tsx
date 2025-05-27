@@ -11,13 +11,16 @@ const HomePage = () => {
                         <CreditCard className="h-8 w-8 text-blue-500" />
                         <span className="ml-2 text-xl font-bold">Meu Fluxo de Caixa</span>
                     </div>
-                    <div className="space-x-4">
-                        <Link to="/login" className="text-gray-300 hover:text-white">
+                    <div className="flex items-center space-x-2 sm:space-x-4">
+                        <Link
+                            to="/login"
+                            className="px-3 py-2 text-sm sm:text-base text-gray-300 hover:text-white transition-colors"
+                        >
                             Entrar
                         </Link>
                         <Link
                             to="/register"
-                            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                            className="px-3 py-2 text-sm sm:text-base rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
                         >
                             Criar Conta
                         </Link>
