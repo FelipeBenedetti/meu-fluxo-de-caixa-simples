@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom';
-import { CreditCard, PieChart, TrendingUp, Users } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { CreditCard, PieChart, TrendingUp, Users, User } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const HomePage = () => {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Navigation */}
@@ -12,18 +16,32 @@ const HomePage = () => {
                         <span className="ml-2 text-xl font-bold">Meu Fluxo de Caixa</span>
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-4">
-                        <Link
-                            to="/login"
-                            className="px-3 py-2 text-sm sm:text-base text-gray-300 hover:text-white transition-colors"
-                        >
-                            Entrar
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="px-3 py-2 text-sm sm:text-base rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
-                        >
-                            Criar Conta
-                        </Link>
+                        {user ? (
+                            <button
+                                onClick={() => navigate('/dashboard')}
+                                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                            >
+                                <User className="h-6 w-6 text-blue-500" />
+                                <span className="hidden sm:block text-sm text-gray-300">
+                                    {user.user_metadata?.name || 'Minha Conta'}
+                                </span>
+                            </button>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="px-3 py-2 text-sm sm:text-base text-gray-300 hover:text-white transition-colors"
+                                >
+                                    Entrar
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="px-3 py-2 text-sm sm:text-base rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                                >
+                                    Criar Conta
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -41,14 +59,16 @@ const HomePage = () => {
                     Sem complicação, sem planilhas complexas.
                 </p>
                 <Link
-                    to="/register"
+                    to={user ? "/dashboard" : "/register"}
                     className="inline-block px-8 py-4 text-xl font-bold bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
                 >
-                    Experimente Grátis por 7 Dias
+                    {user ? "Acessar Dashboard" : "Experimente Grátis por 7 Dias"}
                 </Link>
-                <p className="mt-4 text-gray-500">
-                    Sem compromisso. Cancele quando quiser.
-                </p>
+                {!user && (
+                    <p className="mt-4 text-gray-500">
+                        Sem compromisso. Cancele quando quiser.
+                    </p>
+                )}
             </div>
 
             {/* Features */}
@@ -121,10 +141,10 @@ const HomePage = () => {
                         </li>
                     </ul>
                     <Link
-                        to="/register"
+                        to={user ? "/dashboard" : "/register"}
                         className="block w-full py-3 text-center font-bold bg-blue-600 hover:bg-blue-700 rounded-xl"
                     >
-                        Começar Agora
+                        {user ? "Acessar Dashboard" : "Começar Agora"}
                     </Link>
                 </div>
             </div>
