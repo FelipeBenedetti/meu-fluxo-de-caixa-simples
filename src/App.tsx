@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import { TransactionProvider } from './contexts/TransactionContext';
+import { Helmet } from 'react-helmet-async';
 
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
@@ -23,6 +24,11 @@ function App() {
       <AuthProvider>
         <SubscriptionProvider>
           <TransactionProvider>
+            <Helmet>
+              <html lang="pt-BR" />
+              <meta name="description" content="Controle financeiro simples e eficiente para MEIs e pequenos negócios. Gerencie receitas, despesas e fluxo de caixa em um só lugar." />
+              <meta name="keywords" content="fluxo de caixa, controle financeiro, MEI, microempreendedor" />
+            </Helmet>
             <Toaster position="top-right" />
             <Routes>
               <Route path="/" element={<HomePage />} />
