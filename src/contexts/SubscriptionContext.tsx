@@ -40,7 +40,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     setLoading(true);
-    
+
     try {
       const { data, error } = await supabase
         .from('subscriptions')
@@ -57,10 +57,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       } else if (data) {
         // Calculate if trial is active
         const isTrialActive = data.trial_end ? new Date(data.trial_end) > new Date() : false;
-        
+
         // Determine if there's an active subscription (either paid or in trial period)
         const hasActiveSubscription = data.status === 'active' || isTrialActive;
-        
+
         setSubscription({
           ...data,
           isTrialActive,
@@ -73,7 +73,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error in fetchSubscription:', error);
       setSubscription(null);
     }
-    
+
     setLoading(false);
   };
 
@@ -89,13 +89,16 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
 
     // Get the standard plan id
-    const { data: planData } = await supabase
+    const { data: planData, error: planError } = await supabase
       .from('plans')
       .select('id')
       .eq('name', 'Padrao')
       .single();
 
-    if (!planData) return;
+    if (planError || !planData) {
+      console.error('Error fetching plan:', planError);
+      throw new Error('Plano "Padrao" não encontrado. Verifique se o plano padrão existe no banco de dados.');
+    }
 
     // Calculate trial period dates
     const trialStart = new Date();
@@ -117,11 +120,11 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
     if (error) {
       console.error('Error creating trial subscription:', error);
+      throw error; // Lança o erro para que possa ser tratado no lado do cliente
     } else {
       await refreshSubscription();
     }
   };
-
   return (
     <SubscriptionContext.Provider value={{
       subscription,
