@@ -30,9 +30,14 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // Adicione o loading do useAuth
 
   const fetchSubscription = async () => {
+    // Não faça nada se a autenticação ainda estiver carregando
+    if (authLoading) {
+      return;
+    }
+
     if (!user) {
       setSubscription(null);
       setLoading(false);
@@ -77,9 +82,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setLoading(false);
   };
 
+  // Adicione authLoading às dependências do useEffect
   useEffect(() => {
     fetchSubscription();
-  }, [user]);
+  }, [user, authLoading]);
 
   const refreshSubscription = async () => {
     await fetchSubscription();
