@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 
 -- Insert default plan
 INSERT INTO plans (name, price, description)
-VALUES ('Padrao', 14.90, 'Plano Padrao do Meu Fluxo de Caixa Simples') 
+VALUES ('Padrão', 14.90, 'Plano Padrão do Meu Fluxo de Caixa Simples') 
 ON CONFLICT DO NOTHING;
 
 -- Enable Row Level Security

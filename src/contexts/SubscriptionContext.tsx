@@ -92,12 +92,12 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     const { data: planData, error: planError } = await supabase
       .from('plans')
       .select('id')
-      .eq('name', 'Padrao')
+      .eq('name', 'Padrão')
       .single();
 
     if (planError || !planData) {
       console.error('Error fetching plan:', planError);
-      throw new Error('Plano "Padrao" não encontrado. Verifique se o plano padrão existe no banco de dados.');
+      throw new Error('Plano "Padrão" não encontrado. Verifique se o plano padrão existe no banco de dados.');
     }
 
     // Calculate trial period dates
